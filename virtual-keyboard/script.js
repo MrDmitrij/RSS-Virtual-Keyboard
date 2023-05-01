@@ -50,3 +50,5 @@ function addTextSwitchingLanguage() {
 }
 
 addTextSwitchingLanguage();
+
+alert('Здравствуйте, просьба по возможности проверить работу позже, за вторник - среду(до вечера) сделаю, спасибо за понимание!');
