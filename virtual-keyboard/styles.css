@@ -25,3 +25,65 @@
   border:4px solid black;
   border-radius: 5px;
 }
+
+.row {
+  display: flex;
+  gap: 6px;
+  margin: 6px;
+}
+
+.key {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  background-color: rgb(85,85,85);
+  color: white;
+  font-weight: 500;
+  line-height: 40px;
+  text-align: center;
+  border-radius: 5px;
+  transition: all 0.1s ease-in-out;
+  font-size: 18px;
+}
+
+.key:active{
+  background-color:rgba(101, 220, 152, .7);
+  border-radius: 20px;
+}
+
+.Backspace, .Tab, .Delete, .CapsLock, .Enter, .ShiftLeft, .ShiftRight, .Space{
+  flex-grow: 2;
+}
+.Backspace, .Tab, .Delete, .CapsLock, .Enter, .ShiftLeft, .ShiftRight,
+.ControlLeft, .ControlRight, .MetaLeft,.AltLeft, .AltRight,
+.ArrowLeft, .ArrowRight, .ArrowUp, .ArrowDown{
+  background-color:#222222 ;
+}
+
+.hover {
+  transition: all 0.3s ease-in-out;
+}
+
+.hover:hover{
+  background-color: #f0db24;
+}
+
+.hidden {
+  display: none;
+}
+
+.pressed {
+  background-color:rgba(101, 220, 152, .7);
+  border-radius: 20px;
+}
+
+.unselectable {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           
+}
