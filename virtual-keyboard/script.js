@@ -224,7 +224,17 @@ function constrolsPressed(key) {
 }
 
 function specialActionKeysPressed(key) {
+  let inputText = '';
   switch (key) {
+    case 'Space':
+      inputText = ' ';
+      break;
+    case 'Tab':
+      inputText = '    ';
+      break;
+    case 'Enter':
+      inputText = '\n';
+      break;
     case 'ControlLeft':
     case 'ControlRight':
     case 'AltLeft':
@@ -234,6 +244,7 @@ function specialActionKeysPressed(key) {
     default:
       break;
   }
+  changeTextOfTextArea(inputText);
 }
 
 function pressRealKeyboard(e) {
