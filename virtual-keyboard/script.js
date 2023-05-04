@@ -55,65 +55,65 @@ let en;
 let ru;
 let currentLocale = 'ru';
 const KEYBOARD_LINES = [['Backquote',
-    'Digit1',
-    'Digit2',
-    'Digit3',
-    'Digit4',
-    'Digit5',
-    'Digit6',
-    'Digit7',
-    'Digit8',
-    'Digit9',
-    'Digit0',
-    'Minus',
-    'Equal',
-    'Backspace'], ['Tab',
-    'KeyQ',
-    'KeyW',
-    'KeyE',
-    'KeyR',
-    'KeyT',
-    'KeyY',
-    'KeyU',
-    'KeyI',
-    'KeyO',
-    'KeyP',
-    'BracketLeft',
-    'BracketRight',
-    'Backslash',
-    'Delete'], ['CapsLock',
-    'KeyA',
-    'KeyS',
-    'KeyD',
-    'KeyF',
-    'KeyG',
-    'KeyH',
-    'KeyJ',
-    'KeyK',
-    'KeyL',
-    'Semicolon',
-    'Quote',
-    'Enter'], ['ShiftLeft',
-    'KeyZ',
-    'KeyX',
-    'KeyC',
-    'KeyV',
-    'KeyB',
-    'KeyN',
-    'KeyM',
-    'Comma',
-    'Period',
-    'Slash',
-    'ArrowUp',
-    'ShiftRight'], ['ControlLeft',
-    'MetaLeft',
-    'AltLeft',
-    'Space',
-    'AltRight',
-    'ArrowLeft',
-    'ArrowDown',
-    'ArrowRight',
-    'ControlRight']];
+  'Digit1',
+  'Digit2',
+  'Digit3',
+  'Digit4',
+  'Digit5',
+  'Digit6',
+  'Digit7',
+  'Digit8',
+  'Digit9',
+  'Digit0',
+  'Minus',
+  'Equal',
+  'Backspace'], ['Tab',
+  'KeyQ',
+  'KeyW',
+  'KeyE',
+  'KeyR',
+  'KeyT',
+  'KeyY',
+  'KeyU',
+  'KeyI',
+  'KeyO',
+  'KeyP',
+  'BracketLeft',
+  'BracketRight',
+  'Backslash',
+  'Delete'], ['CapsLock',
+  'KeyA',
+  'KeyS',
+  'KeyD',
+  'KeyF',
+  'KeyG',
+  'KeyH',
+  'KeyJ',
+  'KeyK',
+  'KeyL',
+  'Semicolon',
+  'Quote',
+  'Enter'], ['ShiftLeft',
+  'KeyZ',
+  'KeyX',
+  'KeyC',
+  'KeyV',
+  'KeyB',
+  'KeyN',
+  'KeyM',
+  'Comma',
+  'Period',
+  'Slash',
+  'ArrowUp',
+  'ShiftRight'], ['ControlLeft',
+  'MetaLeft',
+  'AltLeft',
+  'Space',
+  'AltRight',
+  'ArrowLeft',
+  'ArrowDown',
+  'ArrowRight',
+  'ControlRight']];
 const rowsContainer = [];
 let ctrlLeftPressed = false;
 let altLeftPressed = false;
@@ -133,9 +133,9 @@ function getLocale() {
 }
 
 function generateButtons() {
-  for (let i = 0; i < KEYBOARD_LINES.length; i++) {
+  for (let i = 0; i < KEYBOARD_LINES.length; i += 1) {
     rowsContainer.push(new BuildElements('div', keyBoardContainer, ['row']).getElement());
-    for (let j = 0; j < KEYBOARD_LINES[i].length; j++) {
+    for (let j = 0; j < KEYBOARD_LINES[i].length; j += 1) {
       const KEY = new BuildElements('div', rowsContainer[i], [KEYBOARD_LINES[i][j], 'key', 'hover']).getElement();
       const EN_DIV = new BuildElements('div', KEY, ['en']).getElement();
       const RU_DIV = new BuildElements('div', KEY, ['ru']).getElement();
@@ -244,7 +244,7 @@ function pressRealKeyboard(e) {
   } else {
     changeTextOfTextArea(locale[e.code].shiftDown);
   }
-} 
+}
 
 fetch('json/en.json').then((response) => response.json()).then((json) => {
   en = json;
@@ -256,6 +256,5 @@ fetch('json/en.json').then((response) => response.json()).then((json) => {
 });
 
 document.addEventListener('keydown', pressRealKeyboard);
-
 
 alert('Здравствуйте, просьба по возможности проверить работу позже, за вторник - среду(до вечера) сделаю, спасибо за понимание!');
