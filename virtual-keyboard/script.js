@@ -136,6 +136,14 @@ function getLocale() {
   return en;
 }
 
+function generateLocaleKeys(parentDiv, locale, code) {
+  const parentDivCopy = parentDiv;
+  new BuildElements('div', parentDivCopy, ['shiftDown', 'unselectable']).getElement().innerText = locale[code].shiftDown;
+  new BuildElements('div', parentDivCopy, ['shiftUp', 'unselectable']).getElement().innerText = locale[code].shiftUp;
+  new BuildElements('div', parentDivCopy, ['capslock', 'unselectable']).getElement().innerText = locale[code].capslock;
+  new BuildElements('div', parentDivCopy, ['shiftCapslock', 'unselectable']).getElement().innerText = locale[code].shiftCapslock;
+}
+
 function generateButtons() {
   for (let i = 0; i < KEYBOARD_LINES.length; i += 1) {
     rowsContainer.push(new BuildElements('div', keyBoardContainer, ['row']).getElement());
@@ -143,8 +151,8 @@ function generateButtons() {
       const KEY = new BuildElements('div', rowsContainer[i], [KEYBOARD_LINES[i][j], 'key', 'hover']).getElement();
       const EN_DIV = new BuildElements('div', KEY, ['en']).getElement();
       const RU_DIV = new BuildElements('div', KEY, ['ru']).getElement();
-      EN_DIV.innerText = en[KEYBOARD_LINES[i][j]].shiftDown;
-      RU_DIV.innerText = ru[KEYBOARD_LINES[i][j]].shiftDown;
+      generateLocaleKeys(RU_DIV, ru, KEYBOARD_LINES[i][j]);
+      generateLocaleKeys(EN_DIV, en, KEYBOARD_LINES[i][j]);
       if (ru[KEYBOARD_LINES[i][j]].shiftUp === ru[KEYBOARD_LINES[i][j]].shiftDown) {
         auxKeys.push(KEYBOARD_LINES[i][j]);
       }
@@ -187,6 +195,19 @@ function updateKeyboard() {
   } else if (currentLocale === 'en') {
     enableElemenstByClass('en');
     disableElementsByClass('ru');
+  }
+  if (shiftPressed && capslockPressed) {
+    enableElemenstByClass('shiftCapslock');
+    disableElementsByClass('shiftDown', 'shiftUp', 'capslock');
+  } else if (shiftPressed && !capslockPressed) {
+    enableElemenstByClass('shiftUp');
+    disableElementsByClass('shiftDown', 'shiftCapslock', 'capslock');
+  } else if (!shiftPressed && capslockPressed) {
+    enableElemenstByClass('capslock');
+    disableElementsByClass('shiftDown', 'shiftCapslock', 'shiftUp');
+  } else if (!shiftPressed && !capslockPressed) {
+    enableElemenstByClass('shiftDown');
+    disableElementsByClass('capslock', 'shiftCapslock', 'shiftUp');
   }
 }
 
@@ -284,6 +305,19 @@ function changeCursorPosition(offsetX, offsetY) {
   }
 }
 
+function getState() {
+  if (shiftPressed && capslockPressed) {
+    return 'shiftCapslock';
+  }
+  if (shiftPressed && !capslockPressed) {
+    return 'shiftUp';
+  }
+  if (!shiftPressed && capslockPressed) {
+    return 'capslock';
+  }
+  return 'shiftDown';
+}
+
 function capslockKeyPressed() {
   const capslockKey = document.querySelector('.CapsLock');
   capslockPressed = !capslockPressed;
@@ -294,6 +328,7 @@ function capslockKeyPressed() {
     capslockKey.classList.remove('pressed');
     capslockKey.classList.add('hover');
   }
+  updateKeyboard();
 }
 
 function shiftKeyPressed(key) {
@@ -318,6 +353,7 @@ function shiftKeyPressed(key) {
       shift.classList.add('hover');
     }
   }
+  updateKeyboard();
 }
 
 function makeActive(obj, flag) {
@@ -420,7 +456,7 @@ function pressRealKeyboard(e) {
     if (auxKeys.includes(e.code)) {
       specialActionKeysPressed(e.code);
     } else {
-      changeTextOfTextArea(locale[e.code].shiftDown);
+      changeTextOfTextArea(locale[e.code][getState()]);
     }
   } else {
     if (!['CapsLock', 'ShiftLeft', 'ShiftRight', 'ControlLeft', 'ControlRight', 'AltLeft', 'AltRight'].includes(e.code)) {
