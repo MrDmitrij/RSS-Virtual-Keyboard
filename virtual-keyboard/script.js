@@ -504,5 +504,3 @@ document.addEventListener('keydown', pressRealKeyboard);
 document.addEventListener('keyup', pressRealKeyboard);
 keyBoardContainer.addEventListener('mousedown', clickButton);
 keyBoardContainer.addEventListener('mouseup', clickButton);
-
-alert('Здравствуйте, просьба по возможности проверить работу позже, за вторник - среду(до вечера) сделаю, спасибо за понимание!');
