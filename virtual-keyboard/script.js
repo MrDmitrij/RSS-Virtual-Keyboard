@@ -197,6 +197,16 @@ function changeTextOfTextArea(inputText) {
   textArea.selectionEnd = cursor;
 }
 
+function deleteSymbolOfTextArea(symbolPosition, cursorShift = 0) {
+  if (symbolPosition > 0) {
+    const cursor = textArea.selectionStart - 1 + cursorShift;
+    textArea.value = [...textArea.value].slice(0, symbolPosition - 1).join('')
+        + [...textArea.value].slice(symbolPosition, [...textArea.value].length).join('');
+    textArea.selectionStart = cursor;
+    textArea.selectionEnd = cursor;
+  }
+}
+
 function checkLanguageSwitch() {
   if (ctrlLeftPressed && altLeftPressed) {
     currentLocale = LANGUAGES.indexOf(currentLocale) ? 'ru' : 'en';
@@ -234,6 +244,12 @@ function specialActionKeysPressed(key) {
       break;
     case 'Enter':
       inputText = '\n';
+      break;
+    case 'Backspace':
+      deleteSymbolOfTextArea(textArea.selectionStart);
+      break;
+    case 'Delete':
+      deleteSymbolOfTextArea(textArea.selectionStart + 1, 1);
       break;
     case 'ControlLeft':
     case 'ControlRight':
