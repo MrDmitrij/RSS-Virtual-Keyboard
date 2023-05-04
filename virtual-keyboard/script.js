@@ -122,6 +122,16 @@ let altRightPressed = false;
 const auxKeys = [];
 const LANGUAGES = ['ru', 'en'];
 
+function getLocale() {
+  if (currentLocale === 'ru') {
+    return ru;
+  }
+  if (currentLocale === 'en') {
+    return en;
+  }
+  return en;
+}
+
 function generateButtons() {
   for (let i = 0; i < KEYBOARD_LINES.length; i++) {
     rowsContainer.push(new BuildElements('div', keyBoardContainer, ['row']).getElement());
@@ -176,6 +186,17 @@ function updateKeyboard() {
   }
 }
 
+function prepareString(text, cursorPosition, inputText) {
+  return [...text].slice(0, cursorPosition).join('') + inputText + [...text].slice(cursorPosition, [...text].length).join('');
+}
+
+function changeTextOfTextArea(inputText) {
+  const cursor = textArea.selectionStart + [...inputText].length;
+  textArea.value = prepareString(textArea.value, textArea.selectionStart, inputText);
+  textArea.selectionStart = cursor;
+  textArea.selectionEnd = cursor;
+}
+
 function checkLanguageSwitch() {
   if (ctrlLeftPressed && altLeftPressed) {
     currentLocale = LANGUAGES.indexOf(currentLocale) ? 'ru' : 'en';
@@ -217,8 +238,11 @@ function specialActionKeysPressed(key) {
 
 function pressRealKeyboard(e) {
   e.preventDefault();
+  const locale = getLocale();
   if (auxKeys.includes(e.code)) {
     specialActionKeysPressed(e.code);
+  } else {
+    changeTextOfTextArea(locale[e.code].shiftDown);
   }
 } 
 
@@ -232,6 +256,6 @@ fetch('json/en.json').then((response) => response.json()).then((json) => {
 });
 
 document.addEventListener('keydown', pressRealKeyboard);
-document.addEventListener('keyup', pressRealKeyboard);
+
 
 alert('Здравствуйте, просьба по возможности проверить работу позже, за вторник - среду(до вечера) сделаю, спасибо за понимание!');
