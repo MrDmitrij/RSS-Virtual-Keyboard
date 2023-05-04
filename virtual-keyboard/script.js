@@ -371,6 +371,8 @@ function checkLanguageSwitch() {
     currentLocale = LANGUAGES.indexOf(currentLocale) ? 'ru' : 'en';
     localStorage.setItem('language', currentLocale);
     setTimeout(() => {
+      document.querySelector('.ControlLeft').classList.remove('pressed');
+      document.querySelector('.AltLeft').classList.remove('pressed');
       ctrlLeftPressed = false;
       altLeftPressed = false;
     }, 300);
