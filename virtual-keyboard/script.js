@@ -158,7 +158,15 @@ function enableElemenstByClass(...classList) {
   }
 }
 
+function updateLocaleFromLocalStorage() {
+  const data = localStorage.getItem('language');
+  if (data) {
+    currentLocale = data;
+  }
+}
+
 function updateKeyboard() {
+  updateLocaleFromLocalStorage();
   if (currentLocale === 'ru') {
     enableElemenstByClass('ru');
     disableElementsByClass('en');
