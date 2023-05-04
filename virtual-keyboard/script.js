@@ -207,6 +207,79 @@ function deleteSymbolOfTextArea(symbolPosition, cursorShift = 0) {
   }
 }
 
+function changeCursorPosition(offsetX, offsetY) {
+  if (textArea.selectionStart + offsetX < 1) {
+    textArea.selectionStart = 0;
+  } else {
+    textArea.selectionStart += offsetX;
+    textArea.selectionEnd = textArea.selectionStart;
+  }
+  if (offsetY !== 0) {
+    const arrWithLinesStr = textArea.value.split('\n');
+    const arrWithLines = [];
+    for (let i = 0; i < arrWithLinesStr.length; i += 1) {
+      const currentLine = arrWithLinesStr[i].split('');
+      if (currentLine.length < 94) {
+        arrWithLines.push(currentLine);
+      } else {
+        let counter = 0;
+        while (counter * 94 < currentLine.length) {
+          arrWithLines.push(currentLine.slice(94 * counter, 94 * (counter + 1)));
+          counter += 1;
+        }
+      }
+    }
+    let currentLine = 0;
+    let sum = 0;
+    let positionInLine = 0;
+    while (currentLine < arrWithLines.length) {
+      sum += arrWithLines[currentLine].length;
+      if (sum + currentLine < textArea.selectionStart) {
+        currentLine += 1;
+      } else {
+        positionInLine = arrWithLines[currentLine].length - (sum + currentLine
+                     - textArea.selectionStart);
+        break;
+      }
+    }
+    // if current line is zero
+    if (currentLine + offsetY < 0) {
+      textArea.selectionStart = 0;
+      // if current line is last
+    } else if (arrWithLines.length === currentLine + offsetY) {
+      textArea.selectionStart = textArea.value.length + 1;
+      // if lines length is equal
+    } else if (arrWithLines[currentLine].length
+             === arrWithLines[currentLine + offsetY].length) {
+      textArea.selectionStart += (offsetY / Math.abs(offsetY))
+            * (arrWithLines[currentLine].length + 1);
+      // if current line is smaller then next
+    } else if (arrWithLines[currentLine].length < arrWithLines[currentLine + offsetY].length) {
+      if (offsetY < 0) {
+        textArea.selectionStart += (offsetY / Math.abs(offsetY))
+            * (arrWithLines[currentLine + offsetY].length + 1);
+      } else {
+        textArea.selectionStart += (offsetY / Math.abs(offsetY))
+                * (arrWithLines[currentLine].length + 1);
+      }
+      // if current line is bigger then next
+    } else if (arrWithLines[currentLine].length > arrWithLines[currentLine + offsetY].length) {
+      if (positionInLine > arrWithLines[currentLine + offsetY].length && offsetY > 0) {
+        textArea.selectionStart += (offsetY / Math.abs(offsetY))
+            * (arrWithLines[currentLine].length + 1) - positionInLine
+            + arrWithLines[currentLine + offsetY].length;
+      } else if (offsetY > 0) {
+        textArea.selectionStart += (offsetY / Math.abs(offsetY))
+            * (arrWithLines[currentLine].length + 1);
+      } else if (positionInLine <= arrWithLines[currentLine + offsetY].length) {
+        textArea.selectionStart -= arrWithLines[currentLine + offsetY].length + 1;
+      } else {
+        textArea.selectionStart -= positionInLine + 1;
+      }
+    }
+  }
+}
+
 function checkLanguageSwitch() {
   if (ctrlLeftPressed && altLeftPressed) {
     currentLocale = LANGUAGES.indexOf(currentLocale) ? 'ru' : 'en';
@@ -250,6 +323,18 @@ function specialActionKeysPressed(key) {
       break;
     case 'Delete':
       deleteSymbolOfTextArea(textArea.selectionStart + 1, 1);
+      break;
+    case 'ArrowLeft':
+      changeCursorPosition(-1, 0);
+      break;
+    case 'ArrowRight':
+      changeCursorPosition(1, 0);
+      break;
+    case 'ArrowUp':
+      changeCursorPosition(0, -1);
+      break;
+    case 'ArrowDown':
+      changeCursorPosition(0, 1);
       break;
     case 'ControlLeft':
     case 'ControlRight':
