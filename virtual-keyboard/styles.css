@@ -48,6 +48,11 @@
   font-size: 18px;
 }
 
+.key:active{
+  background-color:rgba(101, 220, 152, .7);
+  border-radius: 20px;
+}
+
 .Backspace, .Tab, .Delete, .CapsLock, .Enter, .ShiftLeft, .ShiftRight, .Space{
   flex-grow: 2;
 }

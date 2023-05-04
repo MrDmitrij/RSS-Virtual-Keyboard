@@ -466,6 +466,29 @@ function pressRealKeyboard(e) {
   }
 }
 
+function clickButton(e) {
+  const locale = getLocale();
+  const path = (e.composedPath && e.composedPath()) || e.path;
+  let keyPressed = '';
+  path.forEach((el) => {
+    if (el.classList && el.classList.contains('key')) {
+      let rest = [];
+      [keyPressed, ...rest] = el.classList;
+      rest.pop();
+      if (e.type === 'mousedown') {
+        if (auxKeys.includes(keyPressed)) {
+          specialActionKeysPressed(keyPressed);
+        } else {
+          changeTextOfTextArea(locale[keyPressed][getState()]);
+        }
+        textArea.focus();
+      } else {
+        textArea.focus();
+      }
+    }
+  });
+}
+
 fetch('json/en.json').then((response) => response.json()).then((json) => {
   en = json;
   fetch('json/ru.json').then((response) => response.json()).then((json2) => {
@@ -477,5 +500,7 @@ fetch('json/en.json').then((response) => response.json()).then((json) => {
 
 document.addEventListener('keydown', pressRealKeyboard);
 document.addEventListener('keyup', pressRealKeyboard);
+keyBoardContainer.addEventListener('mousedown', clickButton);
+keyBoardContainer.addEventListener('mouseup', clickButton);
 
 alert('Здравствуйте, просьба по возможности проверить работу позже, за вторник - среду(до вечера) сделаю, спасибо за понимание!');
