@@ -115,6 +115,10 @@ const KEYBOARD_LINES = [['Backquote',
   'ArrowRight',
   'ControlRight']];
 const rowsContainer = [];
+let shiftPressed = false;
+let capslockPressed = false;
+let shiftLeftPressed = false;
+let shiftRightPressed = false;
 let ctrlLeftPressed = false;
 let altLeftPressed = false;
 let ctrlRightPressed = false;
@@ -280,6 +284,52 @@ function changeCursorPosition(offsetX, offsetY) {
   }
 }
 
+function capslockKeyPressed() {
+  const capslockKey = document.querySelector('.CapsLock');
+  capslockPressed = !capslockPressed;
+  if (capslockPressed) {
+    capslockKey.classList.add('pressed');
+    capslockKey.classList.remove('hover');
+  } else {
+    capslockKey.classList.remove('pressed');
+    capslockKey.classList.add('hover');
+  }
+}
+
+function shiftKeyPressed(key) {
+  const shift = document.querySelector(`.${key}`);
+  shiftPressed = !shiftPressed;
+  if (key === 'ShiftLeft') {
+    shiftLeftPressed = !shiftLeftPressed;
+    if (shiftLeftPressed) {
+      shift.classList.add('pressed');
+      shift.classList.remove('hover');
+    } else {
+      shift.classList.remove('pressed');
+      shift.classList.add('hover');
+    }
+  } else {
+    shiftRightPressed = !shiftRightPressed;
+    if (shiftRightPressed) {
+      shift.classList.add('pressed');
+      shift.classList.remove('hover');
+    } else {
+      shift.classList.remove('pressed');
+      shift.classList.add('hover');
+    }
+  }
+}
+
+function makeActive(obj, flag) {
+  if (flag) {
+    obj.classList.add('pressed');
+    obj.classList.remove('hover');
+  } else {
+    obj.classList.add('hover');
+    obj.classList.remove('pressed');
+  }
+}
+
 function checkLanguageSwitch() {
   if (ctrlLeftPressed && altLeftPressed) {
     currentLocale = LANGUAGES.indexOf(currentLocale) ? 'ru' : 'en';
@@ -292,16 +342,21 @@ function checkLanguageSwitch() {
 }
 
 function constrolsPressed(key) {
+  const button = document.querySelector(`.${key}`);
   if (key === 'ControlLeft') {
     ctrlLeftPressed = !ctrlLeftPressed;
+    makeActive(button, ctrlLeftPressed);
     checkLanguageSwitch();
   } else if (key === 'ControlRight') {
     ctrlRightPressed = !ctrlRightPressed;
+    makeActive(button, ctrlRightPressed);
   } else if (key === 'AltLeft') {
     altLeftPressed = !altLeftPressed;
+    makeActive(button, altLeftPressed);
     checkLanguageSwitch();
   } else if (key === 'AltRight') {
     altRightPressed = !altRightPressed;
+    makeActive(button, altRightPressed);
   }
   updateKeyboard();
 }
@@ -336,6 +391,13 @@ function specialActionKeysPressed(key) {
     case 'ArrowDown':
       changeCursorPosition(0, 1);
       break;
+    case 'CapsLock':
+      capslockKeyPressed();
+      break;
+    case 'ShiftLeft':
+    case 'ShiftRight':
+      shiftKeyPressed(key);
+      break;
     case 'ControlLeft':
     case 'ControlRight':
     case 'AltLeft':
@@ -351,10 +413,20 @@ function specialActionKeysPressed(key) {
 function pressRealKeyboard(e) {
   e.preventDefault();
   const locale = getLocale();
-  if (auxKeys.includes(e.code)) {
-    specialActionKeysPressed(e.code);
+  const pressedButton = keyBoardContainer.querySelector(`.${e.code}`);
+  if (e.type === 'keydown') {
+    textArea.blur();
+    pressedButton.classList.add('pressed');
+    if (auxKeys.includes(e.code)) {
+      specialActionKeysPressed(e.code);
+    } else {
+      changeTextOfTextArea(locale[e.code].shiftDown);
+    }
   } else {
-    changeTextOfTextArea(locale[e.code].shiftDown);
+    if (!['CapsLock', 'ShiftLeft', 'ShiftRight', 'ControlLeft', 'ControlRight', 'AltLeft', 'AltRight'].includes(e.code)) {
+      setTimeout(() => pressedButton.classList.remove('pressed'), 500);
+    }
+    textArea.focus();
   }
 }
 
@@ -368,5 +440,6 @@ fetch('json/en.json').then((response) => response.json()).then((json) => {
 });
 
 document.addEventListener('keydown', pressRealKeyboard);
+document.addEventListener('keyup', pressRealKeyboard);
 
 alert('Здравствуйте, просьба по возможности проверить работу позже, за вторник - среду(до вечера) сделаю, спасибо за понимание!');

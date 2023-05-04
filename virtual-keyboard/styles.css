@@ -68,3 +68,8 @@
 .hidden {
   display: none;
 }
+
+.pressed {
+  background-color:rgba(101, 220, 152, .7);
+  border-radius: 20px;
+}
